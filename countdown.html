@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/stylesheet.css" type="text/css" charset="utf-8"/>
+</head>
+<body style="overflow-x: hidden;">
+<div class="container" >
+    <div class="vertical-center">
+        <p id="demo"></p>
+    </div>
+</div>
+
+<script>
+// Set the date we're counting down to
+var d = new Date("May 5, 2023");
+d.toLocaleString('en-US', { timeZone: 'Asia/Phnom_Penh' });
+var countDownDate = d.getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+    
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+    
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+  // Output the result in an element with id="demo"
+  document.getElementById("demo").innerHTML = toLocaleNumber(days,'km') + " " ;
+  // + hours + "H : "
+  // + minutes + "M : " + seconds + "S ";
+    
+  // If the count down is over, write some text 
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("demo").innerHTML = "EXPIRED";
+  }
+}, 1000);
+Date.prototype.getAmPm = function () {
+			if( this.getHours() >= 12 ) { return 1 }; // pm
+			return 0; // am
+		}
+
+		var locale = {
+			en: {
+				month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September ', 'October', 'November', 'December'],
+				ampm: [ 'am', 'pm' ]
+			},
+			km: {
+				month: ['មករា', 'កុម្ភៈ', 'មីនា', 'មេសា', 'ឧសភា', 
+'មិថុនា', 'កក្កដា', 'សីហា', 'កញ្ញា', 'តុលា', 'វិច្ឆិកា', 'ធ្នូ'],
+				ampm: [ 'ព្រឹក', 'ល្ងាច' ]
+			}
+		};
+
+		var toLocaleNumber = function( num, lang, zeroPadding ) {
+			if( typeof num !== 'number' ) return null;
+
+			var numInteger = parseInt( num );
+			var numString = numInteger.toString();
+			
+			if( zeroPadding > 0 && numString.length < zeroPadding ) {
+				numString = '0' + numString;
+			}
+
+			// support only khmer
+			if( lang !== 'km' ) { return numString };
+
+			var khmerNumber = '';
+			var numbersKhmer = ['០', '១', '២', '៣', '៤', '៥', '៦', '៧', '៨', '៩'];
+
+			for( var i=0; i < numString.length; i++ ) {
+				khmerNumber += numbersKhmer[parseInt(numString[i])];
+			}
+
+			return khmerNumber;
+		};
+
+		var formatDate = function( date, lang ) {
+			var formattedDate = null;
+			var hours = d.getHours();
+			if( hours > 12 ) { hours -= 12; }; 
+
+			formattedDate = toLocaleNumber( d.getDate(), lang, 2 )
+				+ '-'
+				+ locale[lang]['month'][d.getMonth()]
+				+ '-'
+				+ toLocaleNumber( d.getFullYear(), lang )
+				+ ' '
+				+ toLocaleNumber( hours, lang, 2 )
+				+ ':'
+				+ toLocaleNumber( d.getMinutes(), lang, 2 )
+				+ ' '
+				+ locale[lang]['ampm'][d.getAmPm()];
+
+			return formattedDate;
+		};
+
+		var d = new Date('2014-02-03');
+
+		// for example: "28-May-2016 3:44 pm" "២៨-ឧសភា-២០១៦ ៣:៤៤ ល្ងាច"
+		console.log( formatDate( d, 'en' ), formatDate( d, 'km' ) );
+</script>
+</body>
+</html>
